@@ -1,0 +1,8 @@
+config USR_DRV_SPI
+  bool  "userspace SPI driver"
+  default y
+  ---help---
+  Support for STM32F4 SPI hardware IP.
+config USR_DRV_SPI_CFLAGS
+  string
+  default " -I../../drivers/socs/stm32f439/spi/api " if USR_DRV_SPI
