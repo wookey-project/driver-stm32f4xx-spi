@@ -22,7 +22,7 @@ static __attribute__((unused)) volatile uint32_t spi_dmastatus;
  * BUS permission
  * DMA permission
  */
-static const char nicolasspiname[4] = "spi1";
+static const char spiname[4] = "spi1";
 
 
 
@@ -81,7 +81,7 @@ static const uint32_t lsb=0;//LSB MODE
 static const uint32_t TI_mode=0;//Motorola not TI frame
 static dma_t dma={0};
 static int dmadesc;
-uint8_t spi1_early_init(void)
+uint8_t spi1_early_init()
 {
     uint8_t ret = 0;
 
@@ -96,7 +96,7 @@ uint8_t spi1_early_init(void)
      * This function create a device_t, fullfill it, and execute a
      * sys_init(INIT_DEVACCESS) syscall.
      */
-    memcpy(dev.name, nicolasspiname, strlen(nicolasspiname));
+    memcpy(dev.name, spiname, strlen(spiname));
     dev.address = SPI1BASE;
     dev.size = 0x400; /*FIXME: 0x400????? just need 0x20 */
     dev.irq_num = 1;
@@ -165,7 +165,7 @@ uint8_t spi1_early_init(void)
     ret = sys_init(INIT_DEVACCESS, &dev, &devdesc);
     if(ret)
       printf("%s:%d %d\n",__FILE__,__LINE__,ret);
-    
+   
     dma.channel = DMA2_CHANNEL_SPI;
     dma.dir = MEMORY_TO_PERIPHERAL; /* write by default */
     dma.in_addr = (physaddr_t) 0; /* to set later via DMA_RECONF */
@@ -185,15 +185,16 @@ uint8_t spi1_early_init(void)
     dma.flow_control = DMA_FLOWCTRL_DMA;
     dma.in_handler = (user_dma_handler_t) spi1_complete_callback_circular;
     dma.out_handler = (user_dma_handler_t) spi1_complete_callback_circular;
-
+#if 0
     ret |= sys_init(INIT_DMA, &dma, &dmadesc);
     if(ret)
       printf("%s:%d %d\n",__FILE__,__LINE__,ret);
+#endif
 
     return ret;
 }
 
-uint8_t spi1_init(void)
+uint8_t spi1_init()
 {
   /*
    * configure the spi device, once it is mapped in task memory
@@ -202,36 +203,30 @@ uint8_t spi1_init(void)
 
 
 
-  /* CF P885 RM0090 */
-  /*BR[2:0] = CPOL & CPHA */
-  /* defaulting to LSB First */
-  /* Defaulting to BIDIMODE=0 */
-  /*FIXME Handle TI mode also*/
-  /*bit 14 = BIIOE ,enable output*/
+  /* CF P885 RM0090 
+     BR[2:0] = CPOL & CPHA
+     defaulting to LSB First
+     Defaulting to BIDIMODE=0 
+     FIXME Handle TI mode also
+     bit 14 = BIIOE ,enable output*/
 
   write_reg_value(r_CORTEX_M_SPI1_CR1, ((frame&1)<<11)|(1<<14)|((lsb&1)<<7)|
       ((baudrate&7)<<3)|((cpol&1)<<1)|(cpha&1));
-#if 0
-  //SSM disabled
-  clear_reg_bits(r_CORTEX_M_SPI1_CR1,(1<<9));
-  //SSOE dans SPI1_CR2 pour dire qu'on output NSS
-  set_reg_bits(r_CORTEX_M_SPI1_CR2,(1<<2));
-#else
-  /* SSM enabled (bit 9) = 0
+
+  /* SSM enabled (bit 9) = 1
      Bit 8 = SSI its value is used instead of NSS to check possibility to send data 
   */
   set_reg_bits(r_CORTEX_M_SPI1_CR1,(1<<9)|(1<<8));
-#endif
 
-  /*Set the FRF bitin SPI1_CR2 to select TI or motorola mode*/
+  /*Set the FRF bit in SPI1_CR2 to select TI or motorola mode*/
   if(TI_mode)
     set_reg_bits(r_CORTEX_M_SPI1_CR2, ((TI_mode&1)<<4));
   else
     clear_reg_bits(r_CORTEX_M_SPI1_CR2, ((TI_mode&1)<<4));
   
-  /*Set MSTR et SPE in SPI1_CR1 */
+  /*Set MSTR and SPE in SPI1_CR1 */
   set_reg_bits(r_CORTEX_M_SPI1_CR1, role);
-  set_reg_bits(r_CORTEX_M_SPI1_CR1, SPI_SPE_BIT);
+  set_reg_bits(r_CORTEX_M_SPI1_CR1, SPI_SPE_BIT);/* SPI Enable */
 
     return 0;
 }
@@ -266,11 +261,8 @@ uint8_t spi1_master_send_byte_sync(uint8_t data)
 
 static uint32_t localcpt;
 static uint32_t totallength,lengthdata;
-static uint32_t error[5]={0,0,0,0,0};
 void spi1_master_send_bytes_async_circular(uint8_t *data, uint32_t mydatalength, uint32_t length)
 {
-	for(int i=0;i<5;i++)
-	  error[i]=0;
         dma.in_addr=(uint32_t)data;
 	dma.size=mydatalength;
         /*Wait for any ongoing tranfert to complete */
@@ -288,36 +280,25 @@ void spi1_master_send_bytes_async_circular(uint8_t *data, uint32_t mydatalength,
         while(spi_dmastatus!=PHTIDLE);
 //	  sys_yield();
 }
-static int tamere=0;
 void spi1_complete_callback_circular(uint8_t __attribute__((unused)) irq, uint32_t status)
 {
 //KERNEL C = must shift status value
 //KERNEL ADA = value already shifted
-status >>= 22; 
- tamere++;
-  if(status&0x01)
-	error[0]++;
-  if(status&0x02)
-	error[1]++;
-  if(status&0x04)
-	error[2]++;
-  if(status&0x10)
-	error[3]++;
+  status >>= 22; 
   if((status&(0x20)))
   {
-    error[4]++;
- localcpt+=lengthdata;
- if(localcpt>=totallength)
-   {
+    localcpt+=lengthdata;
+    if(localcpt>=totallength)
+    {
 
-     sys_cfg(CFG_DMA_DISABLE,dmadesc);
-     while(!(read_reg_value(r_CORTEX_M_SPI1_SR)&SPI_TXE_BIT));
-     while(read_reg_value(r_CORTEX_M_SPI1_SR)&SPI_BSY_BIT);
-     clear_reg_bits(r_CORTEX_M_SPI1_CR2,SPI_TXDMAEN_BIT);
-     spi_dmastatus=PHTIDLE;
- }
+      sys_cfg(CFG_DMA_DISABLE,dmadesc);
+      while(!(read_reg_value(r_CORTEX_M_SPI1_SR)&SPI_TXE_BIT));
+      while(read_reg_value(r_CORTEX_M_SPI1_SR)&SPI_BSY_BIT);
+      clear_reg_bits(r_CORTEX_M_SPI1_CR2,SPI_TXDMAEN_BIT);
+      spi_dmastatus=PHTIDLE;
+    }
   } /* Wait for everything to be fully completed */
-   /* See P898  Note*/
+  /* See P898  Note*/
 }
 
 void spi1_reset_dma()
