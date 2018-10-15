@@ -16,8 +16,7 @@ CFLAGS := $(DEBUG_CFLAGS) $(WARN_CFLAGS) $(EMBED_CFLAGS) $(AFLAGS)
 CFLAGS += -ffreestanding
 CFLAGS += $(DRIVERS_CFLAGS)
 CFLAGS += -I$(PROJ_FILES)/include/generated -I$(PROJ_FILES) -I$(PROJ_FILES)/libs/std -I.
-CFLAGS += -MMD -MP
-CFLAGS += -fno-pie -O0
+CFLAGS += -MMD -MP -Os
 CFLAGS += -I.
 
 LDFLAGS += -fno-builtin -nostdlib -nostartfiles
