@@ -79,7 +79,7 @@ static const uint32_t cpha=0;
 static const uint32_t frame=0;
 static const uint32_t lsb=0;//LSB MODE
 static const uint32_t TI_mode=0;//Motorola not TI frame
-static dma_t dma={0};
+static dma_t dma;
 static int dmadesc;
 uint8_t spi1_early_init()
 {
@@ -88,7 +88,9 @@ uint8_t spi1_early_init()
     /*******************************
      * first, spi device declaration
      *******************************/
-    device_t dev = { 0 };
+    device_t dev;
+    memset((void*)&dev, 0, sizeof(device_t));
+    memset((void*)&dma, 0, sizeof(dma_t));
     int devdesc;
 
     /*
