@@ -3,6 +3,39 @@ config USR_DRV_SPI
   default y
   ---help---
   Support for STM32F4 SPI hardware IP.
+
 config USR_DRV_SPI_CFLAGS
   string
   default " -I../../drivers/socs/stm32f439/spi/api " if USR_DRV_SPI
+
+if USR_DRV_SPI
+
+menu "SPI block configuration"
+
+config SPI1
+  bool "SPI1 activation"
+  default y
+  ---help---
+  Enable SPI1 block.
+
+config SPI2
+  bool "SPI2 activation"
+  default y
+  ---help---
+  Enable SPI2 block.
+
+config SPI3
+  bool "SPI3 activation"
+  default y
+  ---help---
+  Enable SPI3 block.
+
+config SPI4
+  bool "SPI4 activation"
+  default y
+  ---help---
+  Enable SPI4 block.
+
+endmenu
+
+endif
