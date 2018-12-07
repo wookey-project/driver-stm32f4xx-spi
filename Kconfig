@@ -16,13 +16,13 @@ config SPI1
 
 config SPI2
   bool "SPI2 activation"
-  default y
+  default n
   ---help---
   Enable SPI2 block.
 
 config SPI3
   bool "SPI3 activation"
-  default y
+  default n
   ---help---
   Enable SPI3 block.
 
