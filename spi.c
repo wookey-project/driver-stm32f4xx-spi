@@ -23,7 +23,7 @@
 #include "spi_generic.h"
 #include "api/generic_spi_footer.h"
 #undef SPI_NUMBER
-#endif 
+#endif
 
 #ifdef CONFIG_SPI2
 #define SPI_NUMBER 2
@@ -32,7 +32,7 @@
 #include "spi_generic.h"
 #include "api/generic_spi_footer.h"
 #undef SPI_NUMBER
-#endif 
+#endif
 
 #ifdef CONFIG_SPI3
 #include "api/generic_spi_header.h"
@@ -41,7 +41,7 @@
 #include "spi_generic.h"
 #include "api/generic_spi_footer.h"
 #undef SPI_NUMBER
-#endif 
+#endif
 
 #ifdef CONFIG_SPI4
 #include "api/generic_spi_header.h"
@@ -50,5 +50,5 @@
 #include "spi_generic.h"
 #include "api/generic_spi_footer.h"
 #undef SPI_NUMBER
-#endif 
+#endif
 

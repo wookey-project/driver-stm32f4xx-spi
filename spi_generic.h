@@ -91,7 +91,7 @@ uint8_t spi_early_init()
     dev.irqs[0].handler = SPI_IRQHandler;
     dev.irqs[0].irq =SPI_IRQ; //59; /* starting with STACK 43 + 16*/
     dev.irqs[0].mode = IRQ_ISR_STANDARD; /* if ISR force MT immediat execution, use FORCE_MAINTHREAD instead of STANDARD, and activate FISR permission */
-    
+
     dev.irqs[0].posthook.status = 0x0008; /* SR is first read */
     dev.irqs[0].posthook.data = 0x000c; /* Data reg  is 2nd read */
 
@@ -120,7 +120,7 @@ uint8_t spi_early_init()
     dev.gpios[0].type       = GPIO_PIN_OTYPER_PP;
     dev.gpios[0].speed      = GPIO_PIN_VERY_HIGH_SPEED;
 
-    /* SPI_CK is on PB3 */ 
+    /* SPI_CK is on PB3 */
     dev.gpios[1].mask         = GPIO_MASK_SET_MODE | GPIO_MASK_SET_PUPD | GPIO_MASK_SET_TYPE | GPIO_MASK_SET_SPEED | GPIO_MASK_SET_AFR;
     dev.gpios[1].kref.port    = spi_configuration[1].port;
     dev.gpios[1].kref.pin     = spi_configuration[1].num;
@@ -129,7 +129,7 @@ uint8_t spi_early_init()
     dev.gpios[1].speed        = GPIO_PIN_VERY_HIGH_SPEED;
     dev.gpios[1].afr          = GPIO_AF_SPI;
 
-    /* SPI_MISO is on PA6 */ 
+    /* SPI_MISO is on PA6 */
     dev.gpios[2].mask         = GPIO_MASK_SET_MODE | GPIO_MASK_SET_PUPD | GPIO_MASK_SET_TYPE | GPIO_MASK_SET_SPEED | GPIO_MASK_SET_AFR;
     dev.gpios[2].kref.port    = spi_configuration[2].port;
     dev.gpios[2].kref.pin     = spi_configuration[2].num;
@@ -137,8 +137,8 @@ uint8_t spi_early_init()
     dev.gpios[2].pupd         = GPIO_NOPULL;
     dev.gpios[2].speed        = GPIO_PIN_VERY_HIGH_SPEED;
     dev.gpios[2].afr          = GPIO_AF_SPI;
-	
-    /* SPI_MOSI is on PA7 */ 
+
+    /* SPI_MOSI is on PA7 */
     dev.gpios[3].mask         = GPIO_MASK_SET_MODE | GPIO_MASK_SET_PUPD | GPIO_MASK_SET_TYPE | GPIO_MASK_SET_SPEED | GPIO_MASK_SET_AFR;
     dev.gpios[3].kref.port    = spi_configuration[3].port;
     dev.gpios[3].kref.pin     = spi_configuration[3].num;
@@ -147,11 +147,11 @@ uint8_t spi_early_init()
     dev.gpios[3].speed        = GPIO_PIN_VERY_HIGH_SPEED;
     dev.gpios[3].afr          = GPIO_AF_SPI;
 
-    
+
     ret = sys_init(INIT_DEVACCESS, &dev, &devdesc);
     if(ret)
       printf("%s:%d %d\n",__FILE__,__LINE__,ret);
-   
+
     spi_dma.channel = DMA2_CHANNEL_SPI;
     spi_dma.dir = MEMORY_TO_PERIPHERAL; /* write by default */
     spi_dma.in_addr = (physaddr_t) 0; /* to set later via DMA_RECONF */
@@ -189,10 +189,10 @@ uint8_t spi_init()
 
 
 
-  /* CF P885 RM0090 
+  /* CF P885 RM0090
      BR[2:0] = CPOL & CPHA
      defaulting to LSB First
-     Defaulting to BIDIMODE=0 
+     Defaulting to BIDIMODE=0
      FIXME Handle TI mode also
      bit 14 = BIIOE ,enable output*/
 
@@ -200,7 +200,7 @@ uint8_t spi_init()
       ((spi_baudrate&7)<<3)|((spi_cpol&1)<<1)|(spi_cpha&1));
 
   /* SSM enabled (bit 9) = 1
-     Bit 8 = SSI its value is used instead of NSS to check possibility to send data 
+     Bit 8 = SSI its value is used instead of NSS to check possibility to send data
   */
   set_reg_bits(r_CORTEX_M_SPI_CR1,(1<<9)|(1<<8));
 
@@ -209,7 +209,7 @@ uint8_t spi_init()
     set_reg_bits(r_CORTEX_M_SPI_CR2, ((spi_TI_mode&1)<<4));
   else
     clear_reg_bits(r_CORTEX_M_SPI_CR2, ((spi_TI_mode&1)<<4));
-  
+
   /*Set MSTR and SPE in SPI_CR1 */
   set_reg_bits(r_CORTEX_M_SPI_CR1, spi_role);
   set_reg_bits(r_CORTEX_M_SPI_CR1, SPI_SPE_BIT);/* SPI Enable */
@@ -260,7 +260,7 @@ void spi_master_send_bytes_async_circular(uint8_t *data, uint32_t mydatalength, 
 	lengthdata=mydatalength;
 
 	spi_dmastatus=PHTBUSY;
-	sys_cfg(CFG_DMA_RECONF, &spi_dma, DMA_RECONF_BUFIN | DMA_RECONF_BUFSIZE 
+	sys_cfg(CFG_DMA_RECONF, &spi_dma, DMA_RECONF_BUFIN | DMA_RECONF_BUFSIZE
                 | DMA_RECONF_MODE ,spi_dmadesc);
 
         set_reg_bits(r_CORTEX_M_SPI_CR2,(1<<1));
@@ -271,7 +271,7 @@ void spi_complete_callback_circular(uint8_t __attribute__((unused)) irq, uint32_
 {
 //KERNEL C = must shift status value
 //KERNEL ADA = value already shifted
-  status >>= 22; 
+  status >>= 22;
   if((status&(0x20)))
   {
     localcpt+=lengthdata;
