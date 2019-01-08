@@ -32,7 +32,7 @@ config SPI3
 
 config SPI4
   bool "SPI4 activation"
-  default y
+  default n
   ---help---
   Enable SPI4 block.
 
