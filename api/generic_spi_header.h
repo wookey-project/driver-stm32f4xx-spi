@@ -1,6 +1,6 @@
 /*
 *
-*   Tools 
+*   Tools
 *
 */
 #define spi_glue(a,b) a ## b
@@ -42,7 +42,7 @@
 /*
 *
 *
-*  Registers renaming 
+*  Registers renaming
 *
 *
 */
@@ -53,7 +53,7 @@
 
 /*
 * Global variable renaming
-*/ 
+*/
 #define spi_dmastatus spi_xtriglue(spi, SPI_NUMBER, _dmastatus)
 
 #define strnumber spi_xgluestr(spi, SPI_NUMBER )
