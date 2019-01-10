@@ -7,7 +7,7 @@ static __attribute__((unused)) volatile uint32_t spi_dmastatus;
  * BUS permission
  * DMA permission
  */
-static const char spiname[4] = strnumber;
+static const char spiname[5] = strnumber;
 
 
 
@@ -83,7 +83,6 @@ uint8_t spi_early_init()
      * sys_init(INIT_DEVACCESS) syscall.
      */
     memcpy(dev.name, spiname, 4);
-    printf("spiname is %s\n", spiname);
     dev.address = SPIBASE;
     dev.size = 0x400; /*FIXME: 0x400????? just need 0x20 */
     dev.irq_num = 1;
