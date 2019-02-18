@@ -1,6 +1,4 @@
 #include "api/types.h"
-#include "kernel/exported/devices.h"
-#include "kernel/exported/dmas.h"
 #include "api/print.h"
 #include "api/regutils.h"
 #include "spi_regs.h"
