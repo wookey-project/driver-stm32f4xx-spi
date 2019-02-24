@@ -74,7 +74,8 @@ uint8_t spi_early_init()
     /*******************************
      * first, spi device declaration
      *******************************/
-    device_t dev = { 0 };
+    device_t dev;
+    memset(&dev, 0, sizeof(device_t));
     int devdesc;
 
     /*
