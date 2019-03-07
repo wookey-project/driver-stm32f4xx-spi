@@ -37,7 +37,10 @@
 #define spi_power_up spi_xtriglue (spi ,SPI_NUMBER ,_power_up)
 #define spi_enabling_irqs spi_xtriglue (spi ,SPI_NUMBER ,_enabling_irqs)
 #define spi_configuration spi_xtriglue (spi ,SPI_NUMBER ,_configuration)
-
+#define spi_set_baudrate spi_xtriglue (spi ,SPI_NUMBER ,_set_baudrate)
+#define spi_set_endianness spi_xtriglue (spi ,SPI_NUMBER ,_set_endianness)
+#define spi_set_frame spi_xtriglue (spi ,SPI_NUMBER ,_set_frame)
+#define spi_set_cpol_cpha spi_xtriglue (spi ,SPI_NUMBER ,_set_cpol_cpha)
 
 /*
 *
@@ -67,4 +70,7 @@
 #define spi_TI_mode spi_xtriglue(spi,SPI_NUMBER,_TI_mode)
 #define spi_dma spi_xtriglue(spi,SPI_NUMBER,_dma)
 #define spi_dmadesc spi_xtriglue(spi,SPI_NUMBER,_dmadesc)
+#define spi_dev_infos spi_xtriglue(spi,SPI_NUMBER,_dev_infos)
+
+#define CONFIG_SPI_ROLE_MASTER spi_xtriglue(CONFIG_SPI,SPI_NUMBER,_ROLE_MASTER)
 

@@ -13,6 +13,16 @@ config SPI1
   default y
   ---help---
   Enable SPI1 block.
+  
+if SPI1
+
+config SPI1_ROLE_MASTER
+  bool "SPI1 role Master"
+  default y
+  ---help---
+  Defines the SPI1 role Master or Slave
+  
+endif
 
 config SPI2
   bool "SPI2 activation"
@@ -20,11 +30,31 @@ config SPI2
   ---help---
   Enable SPI2 block.
 
+if SPI2
+
+config SPI2_ROLE_MASTER
+  bool "SPI2 role Master"
+  default y
+  ---help---
+  Defines the SPI2 role Master or Slave
+  
+endif
+
 config SPI3
   bool "SPI3 activation"
   default n
   ---help---
   Enable SPI3 block.
+
+if SPI3
+
+config SPI3_ROLE_MASTER
+  bool "SPI3 role Master"
+  default y
+  ---help---
+  Defines the SPI3 role Master or Slave
+  
+endif
 
 config SPI4
   bool "SPI4 activation"
@@ -32,6 +62,17 @@ config SPI4
   ---help---
   Enable SPI4 block.
 
+if SPI4
+
+config SPI4_ROLE_MASTER
+  bool "SPI4 role Master"
+  default y
+  ---help---
+  Defines the SPI4 role Master or Slave
+  
+endif
 endmenu
 
 endif
+
+

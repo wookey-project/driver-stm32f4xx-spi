@@ -53,16 +53,12 @@ void SPI_IRQHandler(uint8_t irq __UNUSED, // IRQ number
 
 void spi_complete_callback_circular(uint8_t irq, uint32_t status);
 
-static const struct {int port; int num;} spi_configuration[]={ /*NSS*/ {GPIO_PC,6},\
-						        /*CLK*/ {GPIO_PB,3},\
-						        /*MISO*/{GPIO_PA,6},\
-						        /*MOSI*/{GPIO_PA,7}};
-static const uint32_t spi_role=SPI_MSTR_BIT;
-static const uint32_t spi_baudrate=2;
-static const uint32_t spi_cpol=0;
-static const uint32_t spi_cpha=0;
-static const uint32_t spi_frame=0;
-static const uint32_t spi_lsb=0;//LSB MODE
+static uint32_t spi_role=SPI_MSTR_BIT;
+static uint32_t spi_baudrate=3;
+static uint32_t spi_cpol=0;
+static uint32_t spi_cpha=0;
+static uint32_t spi_frame=0;
+static uint32_t spi_lsb=0;//LSB MODE
 static const uint32_t spi_TI_mode=0;//Motorola not TI frame
 static dma_t spi_dma={0};
 static int spi_dmadesc;
@@ -85,13 +81,13 @@ uint8_t spi_early_init()
      */
     memset(&dev,sizeof(device_t),0);
     memcpy(dev.name, spiname, strlen(spiname));
-    dev.address = SPIBASE;
-    dev.size = 0x400; /*FIXME: 0x400????? just need 0x20 */
+    dev.address = spi_dev_infos.address;
+    dev.size = spi_dev_infos.size; 
     dev.irq_num = 1;
 
     /* IRQ configuration */
     dev.irqs[0].handler = SPI_IRQHandler;
-    dev.irqs[0].irq =SPI_IRQ; //59; /* starting with STACK 43 + 16*/
+    dev.irqs[0].irq =SPI_IRQ; 
     dev.irqs[0].mode = IRQ_ISR_STANDARD; /* if ISR force MT immediat execution, use FORCE_MAINTHREAD instead of STANDARD, and activate FISR permission */
 
     dev.irqs[0].posthook.status = 0x0008; /* SR is first read */
@@ -115,17 +111,17 @@ uint8_t spi_early_init()
     dev.gpios[0].mask       = GPIO_MASK_SET_MODE | GPIO_MASK_SET_PUPD \
 				| GPIO_MASK_SET_TYPE | GPIO_MASK_SET_SPEED \
 				| GPIO_MASK_SET_AFR;
-    dev.gpios[0].kref.port  = spi_configuration[0].port;
-    dev.gpios[0].kref.pin   = spi_configuration[0].num;
-    dev.gpios[0].mode       = (spi_role==SPI_MSTR_BIT?GPIO_PIN_OUTPUT_MODE:GPIO_PIN_INPUT_MODE);
+    dev.gpios[0].kref.port  = spi_dev_infos.gpios[0].port;
+    dev.gpios[0].kref.pin   = spi_dev_infos.gpios[0].pin;
+    dev.gpios[0].mode       = (CONFIG_SPI_ROLE_MASTER == 1?GPIO_PIN_OUTPUT_MODE:GPIO_PIN_INPUT_MODE);
     dev.gpios[0].pupd       = GPIO_PULLUP;
     dev.gpios[0].type       = GPIO_PIN_OTYPER_PP;
     dev.gpios[0].speed      = GPIO_PIN_VERY_HIGH_SPEED;
 
     /* SPI_CK is on PB3 */
     dev.gpios[1].mask         = GPIO_MASK_SET_MODE | GPIO_MASK_SET_PUPD | GPIO_MASK_SET_TYPE | GPIO_MASK_SET_SPEED | GPIO_MASK_SET_AFR;
-    dev.gpios[1].kref.port    = spi_configuration[1].port;
-    dev.gpios[1].kref.pin     = spi_configuration[1].num;
+    dev.gpios[1].kref.port    = spi_dev_infos.gpios[1].port;
+    dev.gpios[1].kref.pin     = spi_dev_infos.gpios[1].pin;
     dev.gpios[1].mode         = GPIO_PIN_ALTERNATE_MODE;
     dev.gpios[1].pupd         = GPIO_PULLUP;
     dev.gpios[1].speed        = GPIO_PIN_VERY_HIGH_SPEED;
@@ -133,8 +129,8 @@ uint8_t spi_early_init()
 
     /* SPI_MISO is on PA6 */
     dev.gpios[2].mask         = GPIO_MASK_SET_MODE | GPIO_MASK_SET_PUPD | GPIO_MASK_SET_TYPE | GPIO_MASK_SET_SPEED | GPIO_MASK_SET_AFR;
-    dev.gpios[2].kref.port    = spi_configuration[2].port;
-    dev.gpios[2].kref.pin     = spi_configuration[2].num;
+    dev.gpios[2].kref.port    = spi_dev_infos.gpios[2].port;
+    dev.gpios[2].kref.pin     = spi_dev_infos.gpios[2].pin;
     dev.gpios[2].mode         = GPIO_PIN_ALTERNATE_MODE;
     dev.gpios[2].pupd         = GPIO_NOPULL;
     dev.gpios[2].speed        = GPIO_PIN_VERY_HIGH_SPEED;
@@ -142,8 +138,8 @@ uint8_t spi_early_init()
 
     /* SPI_MOSI is on PA7 */
     dev.gpios[3].mask         = GPIO_MASK_SET_MODE | GPIO_MASK_SET_PUPD | GPIO_MASK_SET_TYPE | GPIO_MASK_SET_SPEED | GPIO_MASK_SET_AFR;
-    dev.gpios[3].kref.port    = spi_configuration[3].port;
-    dev.gpios[3].kref.pin     = spi_configuration[3].num;
+    dev.gpios[3].kref.port    = spi_dev_infos.gpios[3].port;
+    dev.gpios[3].kref.pin     = spi_dev_infos.gpios[3].pin;
     dev.gpios[3].mode         = GPIO_PIN_ALTERNATE_MODE;
     dev.gpios[3].pupd         = GPIO_NOPULL;
     dev.gpios[3].speed        = GPIO_PIN_VERY_HIGH_SPEED;
@@ -152,7 +148,7 @@ uint8_t spi_early_init()
 
     ret = sys_init(INIT_DEVACCESS, &dev, &devdesc);
     if(ret)
-      printf("%s:%d %d\n",__FILE__,__LINE__,ret);
+      printf("%s:%d %d\n","spi_generic",__LINE__,ret);
 
     spi_dma.channel = DMA2_CHANNEL_SPI;
     spi_dma.dir = MEMORY_TO_PERIPHERAL; /* write by default */
@@ -217,6 +213,25 @@ uint8_t spi_init()
   set_reg_bits(r_CORTEX_M_SPI_CR1, SPI_SPE_BIT);/* SPI Enable */
 
     return 0;
+}
+
+void spi_set_cpol_cpha(int cpol,int cpha)
+{
+  spi_cpol=cpol&1;
+  spi_cpha=cpha&1;
+}
+
+void spi_set_frame(int frame)
+{
+  spi_frame=frame&1;
+}
+void spi_set_endianness(int lsb)
+{
+  spi_lsb=lsb&1;
+}
+void spi_set_baudrate(int baudrate)
+{
+  spi_baudrate=baudrate & 7;
 }
 
 /* other functions abstracting spi interaction (low level commands execution) */
