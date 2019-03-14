@@ -1,5 +1,6 @@
 #include "api/types.h"
 #include "api/print.h"
+#include "api/string.h"
 #include "api/regutils.h"
 #include "spi_regs.h"
 #include "api/syscall.h"
