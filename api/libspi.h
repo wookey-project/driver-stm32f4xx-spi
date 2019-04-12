@@ -1,6 +1,7 @@
 #ifndef SPI_H
 # define  SPI_H
 
+#include "autoconf.h"
 #include "spi_regs.h"
 #include "api/types.h"
 //static __attribute__((unused)) volatile uint32_t dmastatus;
@@ -20,7 +21,7 @@
 #include "generic_libspi.h"
 #include "generic_spi_footer.h"
 #undef SPI_NUMBER
-#endif 
+#endif
 
 #ifdef CONFIG_SPI2
 #define SPI_NUMBER 2
@@ -29,7 +30,7 @@
 #include "generic_libspi.h"
 #include "generic_spi_footer.h"
 #undef SPI_NUMBER
-#endif 
+#endif
 
 #ifdef CONFIG_SPI3
 #include "generic_spi_header.h"
@@ -38,7 +39,7 @@
 #include "generic_libspi.h"
 #include "generic_spi_footer.h"
 #undef SPI_NUMBER
-#endif 
+#endif
 
 #ifdef CONFIG_SPI4
 #include "generic_spi_header.h"
@@ -47,7 +48,7 @@
 #include "generic_libspi.h"
 #include "generic_spi_footer.h"
 #undef SPI_NUMBER
-#endif 
+#endif
 
 
 #if 0

@@ -19,4 +19,21 @@
 #define SPI_TXE_BIT             1   /*(1<<1) */
 #define SPI_TXDMAEN_BIT         1   /*(1<<1) */
 
+#define SPI2BASE			0x40003800
+
+#define r_CORTEX_M_SPI2_CR1     REG_ADDR(SPI2BASE+ 0X0)
+#define r_CORTEX_M_SPI2_CR2     REG_ADDR(SPI2BASE+ 0X4)
+#define r_CORTEX_M_SPI2_SR      REG_ADDR(SPI2BASE+ 0X8)
+#define r_CORTEX_M_SPI2_DR      REG_ADDR(SPI2BASE+ 0XC)
+#define r_CORTEX_M_SPI2_CRCPR   REG_ADDR(SPI2BASE+0X10)
+#define r_CORTEX_M_SPI2_RXCRCR  REG_ADDR(SPI2BASE+0X14)
+#define r_CORTEX_M_SPI2_TXCRCR  REG_ADDR(SPI2BASE+0X18)
+
+#define SPI_MSTR_BIT            0x4 /*(1<<2) */
+#define SPI_SPE_BIT             0x40    /*(1<<6) */
+#define SPI_BSY_BIT             0x8 /*(1<<7) */
+#define SPI_TXE_BIT             1   /*(1<<1) */
+#define SPI_TXDMAEN_BIT         1   /*(1<<1) */
+
+
 #endif                          /* !SPI_REGS_H */
