@@ -15,39 +15,51 @@
 
 
 #ifdef CONFIG_SPI1
+#include "generated/spi1.h"
 #define SPI_NUMBER 1
+#define SPI_ENABLE_DMA     CONFIG_SPI1_ENABLE_DMA
 #include "generic_spi_header.h"
 #line 1 "generic_libspi.h.h"
 #include "generic_libspi.h"
 #include "generic_spi_footer.h"
 #undef SPI_NUMBER
+#undef SPI_ENABLE_DMA
 #endif
 
 #ifdef CONFIG_SPI2
+#include "generated/spi2.h"
 #define SPI_NUMBER 2
+#define SPI_ENABLE_DMA     CONFIG_SPI2_ENABLE_DMA
 #include "generic_spi_header.h"
 #line 1 "generic_libspi.h"
 #include "generic_libspi.h"
 #include "generic_spi_footer.h"
 #undef SPI_NUMBER
+#undef SPI_ENABLE_DMA
 #endif
 
 #ifdef CONFIG_SPI3
-#include "generic_spi_header.h"
+#include "generated/spi3.h"
 #define SPI_NUMBER 3
+#define SPI_ENABLE_DMA     CONFIG_SPI3_ENABLE_DMA
+#include "generic_spi_header.h"
 #line 1 "generic_libspi.h"
 #include "generic_libspi.h"
 #include "generic_spi_footer.h"
 #undef SPI_NUMBER
+#undef SPI_ENABLE_DMA
 #endif
 
 #ifdef CONFIG_SPI4
-#include "generic_spi_header.h"
+#include "generated/spi4.h"
 #define SPI_NUMBER 4
+#define SPI_ENABLE_DMA     CONFIG_SPI4_ENABLE_DMA
+#include "generic_spi_header.h"
 #line 1 "generic_libspi.h"
 #include "generic_libspi.h"
 #include "generic_spi_footer.h"
 #undef SPI_NUMBER
+#undef SPI_ENABLE_DMA
 #endif
 
 

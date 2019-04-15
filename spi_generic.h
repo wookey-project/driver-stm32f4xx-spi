@@ -63,6 +63,7 @@ static const uint32_t spi_TI_mode=0;//Motorola not TI frame
 static dma_t spi_dma={0};
 static int spi_dmadesc;
 
+
 uint8_t spi_early_init()
 {
     uint8_t ret = 0;
@@ -82,12 +83,12 @@ uint8_t spi_early_init()
     memset(&dev,sizeof(device_t),0);
     memcpy(dev.name, spiname, strlen(spiname));
     dev.address = spi_dev_infos.address;
-    dev.size = spi_dev_infos.size; 
+    dev.size = spi_dev_infos.size;
     dev.irq_num = 1;
 
     /* IRQ configuration */
     dev.irqs[0].handler = SPI_IRQHandler;
-    dev.irqs[0].irq =SPI_IRQ; 
+    dev.irqs[0].irq =SPI_IRQ;
     dev.irqs[0].mode = IRQ_ISR_STANDARD; /* if ISR force MT immediat execution, use FORCE_MAINTHREAD instead of STANDARD, and activate FISR permission */
 
     dev.irqs[0].posthook.status = 0x0008; /* SR is first read */
@@ -150,15 +151,16 @@ uint8_t spi_early_init()
     if(ret)
       printf("%s:%d %d\n","spi_generic",__LINE__,ret);
 
-    spi_dma.channel = DMA2_CHANNEL_SPI;
+#if SPI_ENABLE_DMA
+    spi_dma.channel = SPI_DMA_TX_CHANNEL;
     spi_dma.dir = MEMORY_TO_PERIPHERAL; /* write by default */
     spi_dma.in_addr = (physaddr_t) 0; /* to set later via DMA_RECONF */
     spi_dma.out_addr = (volatile physaddr_t)r_CORTEX_M_SPI_DR;
     spi_dma.in_prio = DMA_PRI_HIGH;
-    spi_dma.dma = DMA2;
+    spi_dma.dma = SPI_DMA_CTRL;
     spi_dma.size = 0; /* to set later via DMA_RECONF */
 
-    spi_dma.stream = 3;
+    spi_dma.stream = SPI_DMA_TX_STREAM;
 
     spi_dma.mode = DMA_CIRCULAR_MODE;
     spi_dma.mem_inc = 1;
@@ -169,7 +171,6 @@ uint8_t spi_early_init()
     spi_dma.flow_control = DMA_FLOWCTRL_DMA;
     spi_dma.in_handler = (user_dma_handler_t) spi_complete_callback_circular;
     spi_dma.out_handler = (user_dma_handler_t) spi_complete_callback_circular;
-#if 0
     ret |= sys_init(INIT_DMA, &dma, &dmadesc);
     if(ret)
       printf("%s:%d %d\n",__FILE__,__LINE__,ret);
@@ -184,6 +185,28 @@ uint8_t spi_init()
    * configure the spi device, once it is mapped in task memory
    * This function must be executed *after* sys_init(INIT_DONE).
    */
+
+    /*
+     * The SPI baudrate is internal bus clock related. Depending on
+     * the internal bus on which the SPI device is connected, the
+     * divisor must vary to keep the same speed.
+     */
+    uint8_t spi_number = SPI_NUMBER;
+    switch (spi_number) {
+        case 2:
+        case 3:
+            spi_baudrate = 2;
+            break;
+        case 1:
+        case 4:
+        case 5:
+        case 6:
+            spi_baudrate = 3;
+            break;
+        default:
+            spi_baudrate = 3;
+            break;
+    }
 
 
 

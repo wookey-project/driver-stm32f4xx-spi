@@ -13,7 +13,7 @@ config SPI1
   default y
   ---help---
   Enable SPI1 block.
-  
+
 if SPI1
 
 config SPI1_ROLE_MASTER
@@ -21,7 +21,7 @@ config SPI1_ROLE_MASTER
   default y
   ---help---
   Defines the SPI1 role Master or Slave
-  
+
 endif
 
 config SPI2
@@ -37,8 +37,14 @@ config SPI2_ROLE_MASTER
   default y
   ---help---
   Defines the SPI2 role Master or Slave
-  
+
 endif
+
+config SPI2_ENABLE_DMA
+  bool "SPI2 with DMA"
+  default n
+  ---help---
+  Enable DMA acceleration of SPI2 bus
 
 config SPI3
   bool "SPI3 activation"
@@ -53,7 +59,7 @@ config SPI3_ROLE_MASTER
   default y
   ---help---
   Defines the SPI3 role Master or Slave
-  
+
 endif
 
 config SPI4
@@ -69,7 +75,7 @@ config SPI4_ROLE_MASTER
   default y
   ---help---
   Defines the SPI4 role Master or Slave
-  
+
 endif
 endmenu
 
