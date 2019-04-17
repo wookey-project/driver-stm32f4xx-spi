@@ -1,10 +1,10 @@
-#include "api/types.h"
-#include "api/stdio.h"
-#include "api/nostd.h"
-#include "api/string.h"
-#include "api/regutils.h"
+#include "libc/types.h"
+#include "libc/stdio.h"
+#include "libc/nostd.h"
+#include "libc/string.h"
+#include "libc/regutils.h"
 #include "spi_regs.h"
-#include "api/syscall.h"
+#include "libc/syscall.h"
 
 #define GPIO_AF_SPI 5
 #define DMA2_CHANNEL_SPI 3

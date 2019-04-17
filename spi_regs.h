@@ -1,7 +1,7 @@
 #ifndef SPI_REGS_H
 #define  SPI_REGS_H
 
-#include "api/regutils.h"
+#include "libc/regutils.h"
 
 #define SPI1BASE			0x40013000
 #define SPI2BASE			0x40003800

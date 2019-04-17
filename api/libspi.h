@@ -3,7 +3,7 @@
 
 #include "autoconf.h"
 #include "spi_regs.h"
-#include "api/types.h"
+#include "libc/types.h"
 //static __attribute__((unused)) volatile uint32_t dmastatus;
 
 #define SCREEN_NSS GPIO_PC6
