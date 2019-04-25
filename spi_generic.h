@@ -80,7 +80,6 @@ uint8_t spi_early_init()
      * This function create a device_t, fullfill it, and execute a
      * sys_init(INIT_DEVACCESS) syscall.
      */
-    memset(&dev,sizeof(device_t),0);
     memcpy(dev.name, spiname, strlen(spiname));
     dev.address = spi_dev_infos.address;
     dev.size = spi_dev_infos.size;
