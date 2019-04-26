@@ -2,6 +2,7 @@
 #undef spi_master
 #undef spi_pin_init
 #undef spi_master_send_byte_sync
+#undef spi_master_recv_byte_sync
 #undef spi_master_send_bytes_async_circular
 #undef spi_enable
 #undef spi_disable

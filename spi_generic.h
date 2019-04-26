@@ -334,6 +334,10 @@ uint8_t spi_master_send_byte_sync(uint8_t data)
         retval=(uint8_t)read_reg_value(r_CORTEX_M_SPI_DR);
         return retval;
 }
+uint8_t spi_master_recv_byte_sync(void)
+{
+    return spi_master_send_byte_sync(0x42);
+}
 
 
 static uint32_t localcpt;
@@ -358,6 +362,7 @@ void spi_master_send_bytes_async_circular(uint8_t *data, uint32_t mydatalength, 
         while(spi_dmastatus!=PHTIDLE);
 //	  sys_yield();
 }
+
 void spi_complete_callback_circular(uint8_t __attribute__((unused)) irq, uint32_t status)
 {
 //KERNEL C = must shift status value

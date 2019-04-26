@@ -23,6 +23,7 @@
 #define spi_master spi_xtriglue(spi,SPI_NUMBER,_master)
 #define spi_pin_init spi_xtriglue(spi,SPI_NUMBER,_pin_init)
 #define spi_master_send_byte_sync spi_xtriglue(spi,SPI_NUMBER,_master_send_byte_sync)
+#define spi_master_recv_byte_sync spi_xtriglue(spi,SPI_NUMBER,_master_recv_byte_sync)
 #define spi_master_send_bytes_async_circular spi_xtriglue(spi,SPI_NUMBER,_master_send_byte_async_circular)
 #define spi_enable spi_xtriglue(spi,SPI_NUMBER, _enable)
 #define spi_disable spi_xtriglue(spi,SPI_NUMBER,_disable)
