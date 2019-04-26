@@ -178,7 +178,9 @@ uint8_t spi_early_init()
     return ret;
 }
 
-uint8_t spi_init()
+mbed_error_t spi_set_baudrate(uint8_t baudrate);
+
+uint8_t spi_init(uint8_t baudrate)
 {
   /*
    * configure the spi device, once it is mapped in task memory
@@ -190,24 +192,7 @@ uint8_t spi_init()
      * the internal bus on which the SPI device is connected, the
      * divisor must vary to keep the same speed.
      */
-    uint8_t spi_number = SPI_NUMBER;
-    switch (spi_number) {
-        case 2:
-        case 3:
-            spi_baudrate = 2;
-            break;
-        case 1:
-        case 4:
-        case 5:
-        case 6:
-            spi_baudrate = 3;
-            break;
-        default:
-            spi_baudrate = 3;
-            break;
-    }
-
-
+    spi_set_baudrate(baudrate);
 
   /* CF P885 RM0090
      BR[2:0] = CPOL & CPHA
@@ -251,10 +236,77 @@ void spi_set_endianness(int lsb)
 {
   spi_lsb=lsb&1;
 }
-void spi_set_baudrate(int baudrate)
+
+/*
+ * Update the SPI baudrate. This function must be called with the SPI
+ * line disabled (i.e. calling spi_disable() first, then spi_enable() after
+ * the baudrate update.
+ */
+mbed_error_t spi_set_baudrate(uint8_t baudrate)
 {
-  spi_baudrate=baudrate & 7;
+    mbed_error_t ret = MBED_ERROR_NONE;
+    uint8_t spi_number = SPI_NUMBER;
+    uint32_t    stock;
+
+    switch (spi_number) {
+        case 2:
+        case 3:
+            if (spi_baudrate > 0) {
+                spi_baudrate = (baudrate & 7) - 1;
+            } else {
+                ret = MBED_ERROR_TOOBIG;
+                goto end;
+            }
+            break;
+        case 1:
+        case 4:
+        case 5:
+        case 6:
+            spi_baudrate = baudrate & 7;
+            break;
+        default:
+            ret = MBED_ERROR_INVPARAM;
+            goto end;
+    }
+
+    /* get back current CR1 value */
+    stock = read_reg_value(r_CORTEX_M_SPI_CR1);
+    /* reset BR[] field to new baudrate */
+    write_reg_value(r_CORTEX_M_SPI_CR1, (stock & ~(7 << 3)) | (spi_baudrate << 3));
+
+end:
+  return ret;
 }
+
+uint8_t spi_get_baudrate(void)
+{
+    uint8_t spi_number = SPI_NUMBER;
+    uint32_t    stock;
+    uint8_t     baudrate;
+
+    stock = read_reg_value(r_CORTEX_M_SPI_CR1);
+    /* get back baudrate field */
+    baudrate = ((stock & (7 << 3)) >> 3);
+
+    switch (spi_number) {
+        case 2:
+        case 3:
+            baudrate++;
+            break;
+        case 1:
+        case 4:
+        case 5:
+        case 6:
+            break;
+        default:
+            goto end;
+    }
+
+end:
+    return baudrate;
+}
+
+
 
 /* other functions abstracting spi interaction (low level commands execution) */
 

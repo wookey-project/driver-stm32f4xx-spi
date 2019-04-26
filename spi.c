@@ -19,6 +19,7 @@
 #ifdef CONFIG_SPI1
 #define SPI_NUMBER 1
 #include "generated/spi1.h"
+#include "api/libspi_constants.h"
 #include "api/generic_spi_header.h"
 #line 1 "spi_generic.h"
 #include "spi_generic.h"
@@ -29,6 +30,7 @@
 #ifdef CONFIG_SPI2
 #define SPI_NUMBER 2
 #include "generated/spi2.h"
+#include "api/libspi_constants.h"
 #include "api/generic_spi_header.h"
 #line 1 "spi_generic.h"
 #include "spi_generic.h"
@@ -39,6 +41,7 @@
 #ifdef CONFIG_SPI3
 #define SPI_NUMBER 3
 #include "generated/spi3.h"
+#include "api/libspi_constants.h"
 #include "api/generic_spi_header.h"
 #line 1 "spi_generic.h"
 #include "spi_generic.h"
@@ -49,6 +52,7 @@
 #ifdef CONFIG_SPI4
 #define SPI_NUMBER 4
 #include "generated/spi4.h"
+#include "api/libspi_constants.h"
 #include "api/generic_spi_header.h"
 #line 1 "spi_generic.h"
 #include "spi_generic.h"

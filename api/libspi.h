@@ -6,12 +6,16 @@
 #include "libc/types.h"
 //static __attribute__((unused)) volatile uint32_t dmastatus;
 
+#include "libspi_constants.h"
+
+
 #define SCREEN_NSS GPIO_PC6
 #define UP_NSS sys_cfg(CFG_GPIO_SET,(uint8_t)((('C' - 'A') << 4) + 6),1);
  //set_reg_bits(GPIOC_ODR,1<<6);//{volatile int i; for(i=0;i<10000;i++);}
 #define DOWN_NSS sys_cfg(CFG_GPIO_SET,(uint8_t)((('C' - 'A') << 4) + 6),0);
  //clear_reg_bits(GPIOC_ODR,1<<6);//{volatile int i; for(i=0;i<10000;i++);}
 //#define GPIO_AF_SPI1 5
+
 
 
 #ifdef CONFIG_SPI1

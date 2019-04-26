@@ -38,6 +38,7 @@
 #define spi_enabling_irqs spi_xtriglue (spi ,SPI_NUMBER ,_enabling_irqs)
 #define spi_configuration spi_xtriglue (spi ,SPI_NUMBER ,_configuration)
 #define spi_set_baudrate spi_xtriglue (spi ,SPI_NUMBER ,_set_baudrate)
+#define spi_get_baudrate spi_xtriglue (spi ,SPI_NUMBER ,_get_baudrate)
 #define spi_set_endianness spi_xtriglue (spi ,SPI_NUMBER ,_set_endianness)
 #define spi_set_frame spi_xtriglue (spi ,SPI_NUMBER ,_set_frame)
 #define spi_set_cpol_cpha spi_xtriglue (spi ,SPI_NUMBER ,_set_cpol_cpha)

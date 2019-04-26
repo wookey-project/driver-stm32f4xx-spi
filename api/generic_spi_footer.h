@@ -19,9 +19,9 @@
 #undef r_CORTEX_M_SPI_SR
 #undef spi_dmastatus
 #undef spiname
-#undef spi_power_up 
-#undef spi_enabling_irqs 
-#undef spi_configuration 
+#undef spi_power_up
+#undef spi_enabling_irqs
+#undef spi_configuration
 #undef spi_role
 #undef spi_baudrate
 #undef spi_cpol
@@ -34,6 +34,7 @@
 #undef spi_dev_infos
 #undef CONFIG_SPI_ROLE_MASTER
 #undef spi_set_baudrate
+#undef spi_get_baudrate
 #undef spi_set_endianness
 #undef spi_set_frame
 #undef spi_set_cpol_cpha

@@ -15,4 +15,7 @@ void spi_master_init(uint8_t baudrate, uint8_t cpol, uint8_t cpha, uint8_t frame
 
 int spi_is_busy();
 uint8_t spi_early_init();
-uint8_t spi_init();
+uint8_t spi_init(uint8_t baudrate);
+
+mbed_error_t spi_set_baudrate(uint8_t baudrate);
+uint8_t      spi_get_baudrate(void);
