@@ -38,13 +38,14 @@ config SPI2_ROLE_MASTER
   ---help---
   Defines the SPI2 role Master or Slave
 
-endif
 
 config SPI2_ENABLE_DMA
   bool "SPI2 with DMA"
   default n
   ---help---
   Enable DMA acceleration of SPI2 bus
+
+endif
 
 config SPI3
   bool "SPI3 activation"
