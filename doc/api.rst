@@ -23,7 +23,9 @@ Initializing the spi driver is done with the following API ::
 
 .. caution::
    Each SPI function is named after the current SPI device identifier.
-   For e.g., when using SPI2, each function is prefixed spi2_, and so on. This mechanism is based on macros and permit to unify the SPI functions implementations
+   For e.g., when using SPI2, each function is prefixed with ``spi2_``.
+   This mechanism is based on macros and permit to unify the SPI functions
+   implementations
 
 About early init
 ^^^^^^^^^^^^^^^^
