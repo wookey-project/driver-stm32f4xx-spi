@@ -1,6 +1,9 @@
 The SPI driver API
 ------------------
 
+.. highlight:: c
+
+
 Initializing the SPI driver
 """""""""""""""""""""""""""
 

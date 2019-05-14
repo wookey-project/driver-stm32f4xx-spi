@@ -1,6 +1,9 @@
 The SPI driver
 ==============
 
+.. highlight:: c
+
+
 This library is an implementation of the STM32F4 Serial Peripheral Interface (SPI).
 
 It provide an abstraction of the SPI device interactions through high level
